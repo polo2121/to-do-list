@@ -1,16 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-
-import { TodoLists, TodoInsert } from './components/todo-list'
-
-
+import Todo from './components/Todo/Todo'
 
 
 function App() {
   return (
     <div className="App">
-      <TodoInsert />
-      <TodoLists />
+      {console.log(crypto.randomUUID())}
+      <Todo />
     </div>
   )
 }
