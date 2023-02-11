@@ -26,6 +26,16 @@ export function todoReducer(tasks, action) {
                 return { ...tasks, loading: false, taskLists: [...tasks.taskLists, newTask], error: false }
 
             }
+            case 'update': {
+                console.log("updating")
+                const updatedTask = action.payload;
+                const todoLists = [...tasks.taskLists];
+                const taskIndex = todoLists.findIndex(task => {
+                    return task.doc_id === updatedTask.doc_id
+                })
+                todoLists[taskIndex] = updatedTask
+                return { ...tasks, loading: false, taskLists: todoLists, error: false }
+            }
             default: throw Error('Unknow Action: ' + action.type)
         }
     } catch (error) {

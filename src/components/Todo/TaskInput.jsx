@@ -22,7 +22,6 @@ const TaskInput = (props) => {
         return () => clearTimeout(timer);
     }, [success])
 
-
     class noInputDetect extends Error { };
 
     const createTaskCompose = (...fns) => x => fns.reduceRight((arg, fn) => fn(arg), x);

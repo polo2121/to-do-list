@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useReducer, useRef, useState } from 'react'
 import { db } from "../../firebase.config"
-import { collection, getDocs, addDoc, updateDoc } from "firebase/firestore"
+import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from "firebase/firestore"
 
 
 import { intialState, todoReducer } from "./todoReducer"
@@ -58,22 +58,34 @@ const Todo = () => {
             const docRef = doc(db, 'todos', id);
             // Update the timestamp field with the value from the server
             const updateTimestamp = await updateDoc(docRef, task);
+            dispatch({ type: "update", payload: task })
+            console.log("update succcess")
 
         } catch (error) {
             console.log(error);
         }
     }
-    if (loading) return <div>loading</div>
 
-    // if (error) {
-    //     return <div>Something went wrong</div>
-    // }
+    async function deleteTask(id) {
+        try {
+            await deleteDoc(doc(db, "todos", id));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const actions = {
+        update: updateTask,
+        delte: deleteTask
+    }
+
+    if (loading) return <div>loading</div>
 
     return (
         <>
             {console.log(taskLists)}
             <TaskInput onCreate={createTask} />
-            <TaskLists key={taskLists.id} tasks={taskLists} />
+            <TaskLists key={taskLists.id} tasks={taskLists} actions={actions} />
             {error ? <div>Something wrong. Pls try again.</div> : ""}
         </>
     )
