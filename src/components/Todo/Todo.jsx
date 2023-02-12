@@ -5,7 +5,7 @@ import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from "firebase
 
 
 import { intialState, todoReducer } from "./todoReducer"
-import { TaskInput, TaskLists } from "."
+import { TaskInput, TaskLists, Task } from "."
 
 
 const Todo = () => {
@@ -68,16 +68,15 @@ const Todo = () => {
 
     async function deleteTask(id) {
         try {
-            await deleteDoc(doc(db, "todos", id));
+            const removeSuccess = await deleteDoc(doc(db, "todos", id));
+            dispatch({ type: "remove", payload: id })
+            console.log("remove success")
+
         } catch (error) {
             console.log(error)
         }
     }
 
-    const actions = {
-        update: updateTask,
-        delte: deleteTask
-    }
 
     if (loading) return <div>loading</div>
 
@@ -85,7 +84,11 @@ const Todo = () => {
         <>
             {console.log(taskLists)}
             <TaskInput onCreate={createTask} />
-            <TaskLists key={taskLists.id} tasks={taskLists} actions={actions} />
+            <TaskLists>
+                {taskLists.map((task) => {
+                    return (<Task key={task.doc_id} task={task} update={updateTask} remove={deleteTask} />)
+                })}
+            </TaskLists>
             {error ? <div>Something wrong. Pls try again.</div> : ""}
         </>
     )

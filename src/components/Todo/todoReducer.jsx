@@ -36,6 +36,15 @@ export function todoReducer(tasks, action) {
                 todoLists[taskIndex] = updatedTask
                 return { ...tasks, loading: false, taskLists: todoLists, error: false }
             }
+            case 'remove': {
+                const todoLists = [...tasks.taskLists];
+                const newTodoLists = todoLists.filter((todo) => {
+                    return todo.doc_id !== action.payload
+                })
+                console.log(newTodoLists)
+                return { ...tasks, loading: false, taskLists: newTodoLists, error: false }
+
+            }
             default: throw Error('Unknow Action: ' + action.type)
         }
     } catch (error) {

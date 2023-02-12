@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 
-const TaskLists = (props) => {
-    const { tasks, actions } = props
+const TaskLists = ({ children }) => {
+    // const { tasks, actions } = props
 
     return (
         <>
@@ -11,12 +11,7 @@ const TaskLists = (props) => {
                 })
                 }
             </ul> */}
-            {tasks.map((task, index) => {
-                return (
-                    <Task key={index} task={task} actions={actions} />
-                )
-            })}
-
+            {children}
         </>
 
     )
@@ -33,7 +28,7 @@ const styles = {
 export default TaskLists
 
 
-function Task({ task, actions }) {
+export function Task({ task, update, remove }) {
     const [isOpen, setIsOpen] = useState(false)
 
     // console.log(actions)
@@ -56,13 +51,17 @@ function Task({ task, actions }) {
     const editTask = () => {
         console.log("Editing Task")
         const updatedTask = { ...task, task: editInputRef.current.value }
-        actions.update(task.doc_id, updatedTask);
+        update(task.doc_id, updatedTask);
         setIsOpen(false)
 
     }
     const closeEdit = () => {
         setIsOpen(false)
         editInputRef.current.value = task.task
+    }
+
+    const removeTask = () => {
+        remove(task.doc_id);
     }
 
     let updateTask = isOpen ? editTask : activateEdit;
@@ -72,6 +71,8 @@ function Task({ task, actions }) {
             <input ref={editInputRef} style={styles.default} type="text" defaultValue={task.task} disabled={!isOpen} />
             <button onClick={updateTask}>{isOpen ? "Edit Now" : "Edit"}</button>
             {isOpen ? <button onClick={closeEdit}>Cancel</button> : ""}
+            <button onClick={removeTask}>Remove</button>
+
         </div>
     )
 }
